@@ -1,4 +1,3 @@
-#-*- encoding:utf-8 -*-
 from flask import Flask, request
 from receiver import ReceiverThread
 from sender import SenderThread
