@@ -11,7 +11,7 @@ class TimerThread(threading.Thread):
         self.__exit = True
     def run(self):
         while not self.__exit:
-            while True:
+            while self.singleton.db.llen('gn:timer:list-event') > 0:
                 event = self.singleton.db.lindex('gn:timer:list-event', 0)
                 e_time, e_chan, e_cont = event.split(':')
                 if float(e_time) < time.time():
