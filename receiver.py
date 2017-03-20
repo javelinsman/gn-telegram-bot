@@ -1,11 +1,11 @@
 import threading
 import queue
+from types import SimpleNamespace
 
 class ReceiverThread(threading.Thread):
-    def __init__(self, th_sender):
-        threading.Thread.__init__(self)
+    def __init__(self):
+        super().__init__()
         self.__exit = False
-        self.th_sender = th_sender
         self.request_q = queue.Queue()
     def run(self):
         while not self.__exit:
@@ -17,6 +17,7 @@ class ReceiverThread(threading.Thread):
     def add_request(self, args):
         self.request_q.put(args)
     def process_request(self, args):
-        args.send_cid = args.chat_id
-        args.send_msg = args.text
-        self.th_sender.add(args)
+        new_args = SimpleNamespace()
+        new_args.cid = args.chat_id
+        new_args.msg = args.text
+        self.singleton.threads["sender"].add(new_args)

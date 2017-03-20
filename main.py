@@ -1,20 +1,26 @@
 from flask import Flask, request
 from receiver import ReceiverThread
 from sender import SenderThread
+from types import SimpleNamespace
 
 import json
 bot_config = None
 with open('bot_config.json', 'r') as f:
     bot_config = json.loads(f.read())
 
-class Args:
-    pass
+th_sender = SenderThread()
+th_receiver = ReceiverThread()
 
+singleton = SimpleNamespace()
+singleton.bot_config = bot_config
+singleton.threads = {
+    "sender" : th_sender,
+    "receiver" : th_receiver,
+}
 
-th_sender = SenderThread(bot_config)
-th_sender.start()
-th_receiver = ReceiverThread(th_sender)
-th_receiver.start()
+for thread in singleton.threads.values():
+    thread.singleton = singleton
+    thread.start()
 
 app = Flask(__name__)
 
@@ -23,7 +29,7 @@ def webhook():
     print(request.data)
     try:
         data = request.get_json()
-        args = Args()
+        args = SimpleNamespace()
         message = data["message"]
         args.text = message["text"]
         args.chat_id = message["chat"]["id"]
@@ -38,7 +44,5 @@ if __name__ == "__main__":
     try:
         app.run(host=bot_config["host"], port=bot_config["port"], debug=False);
     except (KeyboardInterrupt, SystemExit):
-        th_receiver.th_exit()
-        th_sender.th_exit()
-
-
+        for thread in singleton.threads.values():
+            thread.th_exit()
