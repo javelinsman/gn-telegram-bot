@@ -2,6 +2,8 @@ import threading
 import queue
 from types import SimpleNamespace
 
+import time
+
 class ReceiverThread(threading.Thread):
     def __init__(self):
         super().__init__()
@@ -14,6 +16,7 @@ class ReceiverThread(threading.Thread):
             if not self.request_q.empty():
                 args = self.request_q.get()
                 self.process_request(args)
+            time.sleep(0.1)
     def th_exit(self):
         self.__exit = True
     def add_request(self, args):
