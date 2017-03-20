@@ -1,12 +1,14 @@
 from flask import Flask, request
 from receiver import ReceiverThread
 from sender import SenderThread
+from convert import byte2str
 from types import SimpleNamespace
-
+import redis
 import json
-bot_config = None
-with open('bot_config.json', 'r') as f:
-    bot_config = json.loads(f.read())
+
+db = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+bot_config = json.loads(byte2str(db.get('gn:bot-config')))
 
 th_sender = SenderThread()
 th_receiver = ReceiverThread()
