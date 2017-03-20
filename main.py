@@ -41,6 +41,7 @@ def webhook():
         args.text = message["text"]
         args.chat_id = message["chat"]["id"]
         args.author_id = message["from"]["id"]
+        args.author_name = message["from"]["first_name"]
 
         th_receiver.add_request(args)
     except Exception as e:
