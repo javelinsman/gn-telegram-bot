@@ -26,6 +26,7 @@ singleton.threads = {
 
 for thread in singleton.threads.values():
     thread.singleton = singleton
+    thread.__init2__()
     thread.start()
 
 app = Flask(__name__)

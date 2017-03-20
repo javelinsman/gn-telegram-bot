@@ -7,6 +7,8 @@ class ReceiverThread(threading.Thread):
         super().__init__()
         self.__exit = False
         self.request_q = queue.Queue()
+    def __init2__(self):
+        self.sender = self.singleton.threads["sender"]
     def run(self):
         while not self.__exit:
             if not self.request_q.empty():
@@ -20,4 +22,4 @@ class ReceiverThread(threading.Thread):
         new_args = SimpleNamespace()
         new_args.cid = args.chat_id
         new_args.msg = args.text
-        self.singleton.threads["sender"].add(new_args)
+        self.sender.add(new_args)

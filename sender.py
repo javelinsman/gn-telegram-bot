@@ -8,6 +8,8 @@ class SenderThread(threading.Thread):
         super().__init__()
         self.__exit = False
         self.request_q = queue.Queue()
+    def __init2__(self):
+        pass
     def th_exit(self):
         self.__exit = True
     def run(self):
