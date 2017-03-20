@@ -1,6 +1,0 @@
-{
-    "api_key" : "YOUR TELEGRAM BOT API HERE",
-    "api_base" : "https://api.telegram.org/botYOUR_TELEGRAM_BOT_API/",
-    "host" : "123.456.78.90",
-    "port" : 12345
-}
