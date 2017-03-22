@@ -1,11 +1,13 @@
 from flask import Flask, request
-from receiver import ReceiverThread
-from sender import SenderThread
-from timer import TimerThread
 from convert import byte2str
 from types import SimpleNamespace
 import redis
 import json
+
+from receiver import ReceiverThread
+from sender import SenderThread
+from timer import TimerThread
+from alarm import AlarmThread
 
 db = redis.StrictRedis(host='localhost', port=6379, db=0)
 
@@ -14,6 +16,7 @@ bot_config = json.loads(byte2str(db.get('gn:bot-config')))
 th_sender = SenderThread()
 th_receiver = ReceiverThread()
 th_timer = TimerThread() 
+th_alarm = AlarmThread() 
 
 singleton = SimpleNamespace()
 singleton.db = db
@@ -22,6 +25,7 @@ singleton.threads = {
     "sender" : th_sender,
     "receiver" : th_receiver,
     "timer" : th_timer,
+    "alarm" : th_alarm,
 }
 
 for thread in singleton.threads.values():
