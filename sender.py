@@ -2,6 +2,9 @@ import threading
 import queue
 import requests
 import time
+from types import SimpleNamespace
+
+import json
 
 class SenderThread(threading.Thread):
     def __init__(self):
@@ -20,6 +23,8 @@ class SenderThread(threading.Thread):
                 time.sleep(1)
     def add(self, args):
         self.request_q.put(args)
+    def add_by_cid_msg(self, cid, msg):
+        self.add(SimpleNamespace(cid=cid, msg=msg))
 
     def send_message(self, cid, text):
         return requests.post(
@@ -29,3 +34,14 @@ class SenderThread(threading.Thread):
                 "text" : text
             })
 
+"""
+    "reply_markup" : json.dumps({
+        "keyboard" : [
+            ["슬픔", "후회", "우울"],
+            ["짜증", "화남", "불쾌"],
+            ["기쁨", "설렘"],
+            ["소소", "보통"],
+        ],
+        "one_time_keyboard" : True
+    })
+"""
