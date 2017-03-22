@@ -1,5 +1,4 @@
 import threading
-import queue
 import time
 from convert import byte2str
 
