@@ -11,6 +11,7 @@ class ReceiverThread(threading.Thread):
         self.request_q = queue.Queue()
     def __init2__(self):
         self.sender = self.singleton.threads["sender"]
+        self.alarm = self.singleton.threads["alarm"]
         self.db = self.singleton.db
     def run(self):
         while not self.__exit:
@@ -35,7 +36,8 @@ class ReceiverThread(threading.Thread):
                 self.sender.add_by_cid_msg(args.chat_id, '네~ 그동안 재밌었어요 냥')
             else:
                 self.sender.add_by_cid_msg(args.chat_id, '한 번만 말해도 된다냥')
-
+        elif args.text.split()[0] == '.알람':
+            self.alarm.add_request(' '.join(args.text.split()[1:]), args)
         else:
             new_args = SimpleNamespace()
             new_args.cid = args.chat_id
